@@ -1,6 +1,7 @@
 import de.bezier.guido.*;
-int NUM_ROWS = 11;
-int NUM_COLS = 11;
+int NUM_ROWS = 12;
+int NUM_COLS = 12;
+int NUM_MINES = (int)(NUM_ROWS * NUM_COLS * 0.1);
 private MSButton[][] buttons; //2d array of minesweeper buttons
 private ArrayList <MSButton> mines; //ArrayList of just the minesweeper buttons that are mined
 
@@ -25,12 +26,16 @@ void setup ()
 
 public void setMines()
 {
-    int row = (int)(Math.random() * NUM_ROWS);
-    int col = (int)(Math.random() * NUM_COLS);
-    if(mines.contains(buttons[row][col]))
-        setMines();
-    else
-        mines.add(buttons[row][col]);
+    while(mines.size() < NUM_MINES){
+        int row = (int)(Math.random() * NUM_ROWS);
+        int col = (int)(Math.random() * NUM_COLS);
+        if(mines.contains(buttons[row][col]))
+            setMines();
+        else{
+            mines.add(buttons[row][col]);
+            System.out.println(row + ", " + col);
+        }
+    }
 }
 
 public void draw ()
@@ -48,6 +53,7 @@ public boolean isWon()
 
 public void displayLosingMessage()
 {
+    fill(0);
     text("hadhasdhsakjda", 300, 300);
 }
 
@@ -66,18 +72,20 @@ public boolean isValid(int r, int c)
 public int countMines(int row, int col)
 {
     int numMines = 0;
-    if(isValid(row, col) == true){
-    for(int r = -1; r < 2; r++){
-      for(int c = -1; c < 2; c++){
-        if(isValid(row + r, col + c) == true){
-          if(row + r != row || col + c != col){
-            if(mines.contains(this))
-              numMines++;
-          }
+    if(isValid(row, col) == true)
+    {
+        for(int r = row - 1; r < row + 2; r++)
+        {
+            for(int c = col - 1; c < col + 2; c++)
+            {
+                if(isValid(r, c) == true)
+                {
+                    if(mines.contains(buttons[r][c]))
+                        numMines++;
+                }
+            }
         }
-      }
-    }
-  }    
+    }    
     return numMines;
 }
 
@@ -108,17 +116,30 @@ public class MSButton
         if(mouseButton == RIGHT)
         {
             if(flagged == true)
-            {
                 flagged = false;
-            }
-            flagged = true;
+            else
+                flagged = true;
         } 
         else if(mines.contains(this))
         {
             displayLosingMessage();
         }
-        else if(countMines() > 0)
+        else if(countMines(myRow, myCol) > 0)
         {
+            setLabel(countMines(myRow, myCol));
+        } else {
+            for(int r = myRow - 1; r < myRow + 2; r++){
+                for(int c = myCol - 1; c < myCol + 2; c++){
+                    if(isValid(r, c) && buttons[r][c].clicked == false){
+                        buttons[r][c].clicked = true;
+                        if(countMines(r, c) > 0)
+                            setLabel(countMines(r, c));
+                        else
+                            mousePressed();
+                        // if it doesnt have a label, then press that square again to call the next squares.
+                    }
+                }
+            }
         }
 
         //your code here
