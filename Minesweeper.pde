@@ -130,13 +130,10 @@ public class MSButton
         } else {
             for(int r = myRow - 1; r < myRow + 2; r++){
                 for(int c = myCol - 1; c < myCol + 2; c++){
-                    if(isValid(r, c) && buttons[r][c].clicked == false){
-                        buttons[r][c].clicked = true;
-                        if(countMines(r, c) > 0)
-                            setLabel(countMines(r, c));
-                        else
-                            mousePressed();
-                        // if it doesnt have a label, then press that square again to call the next squares.
+                    if(isValid(r, c) && buttons[r][c].clicked == false && !(r == myRow && c == myCol)){
+                        buttons[r][c].mousePressed();
+                        //if(countMines(r, c) > 0)
+                            //setLabel(countMines(r, c));
                     }
                 }
             }
