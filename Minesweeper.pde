@@ -129,8 +129,7 @@ public void keyPressed(){
         for(int i = mines.size() - 1; i >= 0; i--){
             mines.remove(i);
         }
-    }
-    setMines();
+        setMines();
     for(int r = 0; r < NUM_ROWS; r++){
         for(int c = 0; c < NUM_COLS; c++){
             buttons[r][c].setFlagged(false);
@@ -139,6 +138,7 @@ public void keyPressed(){
         }
     }
     loop();
+    }
 }
 
 public class MSButton
