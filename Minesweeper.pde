@@ -175,6 +175,7 @@ public class MSButton
         } 
         else if(mines.contains(this))
         {
+            fill(255,0,0);
             displayLosingMessage();
             noLoop();
         }
